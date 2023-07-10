@@ -14,10 +14,22 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    phoneNumber: {
-        type: Number,
-        required:true,
+    role: {
+        type:String,
+        default: 'user',
     },
+    bucket: {
+        type:Array,
+        default: [],
+    },
+    bucketLenght: {
+        type:Number,
+        default: 0,
+    },
+    totalPrice: {
+        type:Number,
+        default: 0,
+    }
     }, {
         timeStamps: true,
     },

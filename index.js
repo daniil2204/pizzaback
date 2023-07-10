@@ -8,7 +8,7 @@ import { registerValidation, loginValidation } from './validations/auth.js'
 ;
 import { createPizzaValidation } from './validations/pizza.js'
 
-import {checkAuth,handleValidationErrors } from './utils/index.js'
+import {checkAuth,handleValidationErrors,checkAdmin } from './utils/index.js'
 
 import { UserControllers, PizzaControllers } from './controllers/index.js'
 
@@ -46,17 +46,19 @@ app.post('/auth/register', registerValidation,handleValidationErrors, UserContro
 
 app.post('/auth/login',  loginValidation,handleValidationErrors, UserControllers.login);
 
-app.get('/auth/me', checkAuth , UserControllers.getMe)
+app.post('/auth/bucket',checkAuth, UserControllers.changeBucket);
 
-app.get('/pizza', PizzaControllers.getAll);
+app.get('/auth/me', checkAuth, UserControllers.getMe)
+
+app.get('/pizza',  PizzaControllers.getAll);
 
 app.get('/pizza/:id', PizzaControllers.getOne);
 
-app.post('/pizza',createPizzaValidation,handleValidationErrors, PizzaControllers.create);
+app.post('/pizza' ,checkAuth,checkAdmin,createPizzaValidation,handleValidationErrors, PizzaControllers.create);
 
-app.delete('/pizza/:id', PizzaControllers.remove);
+app.delete('/pizza/:id', checkAuth,checkAdmin,PizzaControllers.remove);
 
-app.patch('/pizza/:id',createPizzaValidation,handleValidationErrors, PizzaControllers.update);
+app.patch('/pizza/:id',checkAuth,checkAdmin,createPizzaValidation,handleValidationErrors, PizzaControllers.update);
 
 app.post('/upload', upload.single('image'), (req,res) => {
     res.json({

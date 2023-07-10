@@ -14,7 +14,7 @@ export const register = async (req,res) => {
             email: req.body.email,
             fullName: req.body.fullName,
             passwordHash: hash,
-            avatarUrl: req.body.avatarUrl,
+            role:'user',
         });
 
         const user = await doc.save();
@@ -86,9 +86,43 @@ export const getMe = async (req,res) => {
             })
         }
 
+        const token = jwt.sign({
+            _id: user._id,
+        }, 'secret123', 
+        {
+            expiresIn: '30d',
+        });
+
         const {passwordHash, ...userData} = user._doc;
 
-        res.json(userData);
+
+        res.json({...userData,token});
+    }catch(err){
+        console.log(err);
+        res.status(400).json({
+            message: 'User not found',
+        })
+    }
+};
+
+export const changeBucket = async (req,res) => {
+    try{
+        const user = await UserModel.findById(req.userId);
+        if (!user) {
+            return res.status(404).json({
+                message:'User not found',
+            })
+        }
+        user.bucket = req.body.bucket;
+        const changedUser = await UserModel.updateOne({
+            _id:req.userId
+        }, {
+            user,
+            bucket:req.body.bucket,
+            bucketLenght:req.body.count,
+            totalPrice:req.body.totalPrice,
+        },);
+        res.json({user});
     }catch(err){
         console.log(err);
         res.status(400).json({
