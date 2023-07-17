@@ -51,8 +51,7 @@ export const remove = async(req,res) => {
     try{
         const pizzaId = req.params.id;
 
-        PizzaModel.deleteOne({_id:pizzaId});
-
+        await PizzaModel.deleteOne({_id:pizzaId});
         res.json({
             success:true,
         })
@@ -76,6 +75,7 @@ export const update = async(req,res) => {
             sizes: req.body.sizes,
             price: req.body.price,
             category: req.body.category,
+            rating: req.body.rating,
         },);
         res.json({
             success:true
