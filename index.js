@@ -54,7 +54,7 @@ app.delete('/pizza/:id', checkAuth,checkAdmin,PizzaControllers.remove);
 app.patch('/pizza/:id',checkAuth,checkAdmin,createPizzaValidation,handleValidationErrors, PizzaControllers.update);
 
 
-app.listen(4444, (err) => {
+app.listen(process.env.PORT || 4444, (err) => {
     if (err) {
         return console.log(err);
     }
